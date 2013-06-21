@@ -1,0 +1,45 @@
+extensions:
+  MonomorphismRestriction: false
+  TemplateHaskell: true
+  ImplicitPrelude: false
+  MultiParamTypeClasses: true
+  DeriveDataTypeable: true
+  TypeFamilies: true
+  QuasiQuotes: true
+  EmptyDataDecls: true
+  GeneralizedNewtypeDeriving: true
+  CPP: true
+  GADTs: true
+  FlexibleContexts: true
+  OverloadedStrings: true
+version: 1
+module-template: ! 'module MODULE_NAME where
+
+'
+modules:
+  Main(tests/main.hs):
+    filename: tests/main.hs
+  Foundation:
+    filename: Foundation.hs
+  Import:
+    filename: Import.hs
+  Handler.Home:
+    filename: Handler/Home.hs
+  Main(devel.hs):
+    filename: devel.hs
+  TestImport:
+    filename: tests/TestImport.hs
+  Application:
+    filename: Application.hs
+  Main(app/main.hs):
+    filename: app/main.hs
+  Settings.StaticFiles:
+    filename: Settings/StaticFiles.hs
+  Settings:
+    filename: Settings.hs
+  HomeTest:
+    filename: tests/HomeTest.hs
+  Model:
+    filename: Model.hs
+  Settings.Development:
+    filename: Settings/Development.hs
