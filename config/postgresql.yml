@@ -1,0 +1,24 @@
+Default: &defaults
+  user: social-mashup
+  password: social-mashup
+  host: localhost
+  port: 5432
+  database: social-mashup
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: social-mashup_test
+  <<: *defaults
+
+Staging:
+  database: social-mashup_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: social-mashup_production
+  poolsize: 100
+  <<: *defaults
