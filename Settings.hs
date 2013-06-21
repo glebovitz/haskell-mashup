@@ -74,3 +74,10 @@ parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = Extra
     <$> o .:  "copyright"
     <*> o .:? "analytics"
+
+someFunction :: Int -> Int -> Int
+someFunction = do
+  someAction
+  someOtherAction
+
+
