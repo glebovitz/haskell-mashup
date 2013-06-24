@@ -70,3 +70,4 @@ The tutorial is to be written for FP Complete's School of Haskell. The tutorial
 does not need to dive into the details of monad transformers, applicative functors
 and so on. References to pre-existing documentation can be made (for example,
 Michael Snoyman's Yesod book or other articles on the School or Haskell).
+
