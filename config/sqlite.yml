@@ -1,0 +1,20 @@
+Default: &defaults
+  database: social-mashup.sqlite3
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: social-mashup_test.sqlite3
+  <<: *defaults
+
+Staging:
+  database: social-mashup_staging.sqlite3
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: social-mashup_production.sqlite3
+  poolsize: 100
+  <<: *defaults

@@ -9,3 +9,5 @@ yesod-devel/
 *.sublime-project
 *.sublime-workspace
 cabal-dev
+social-mashup
+*.sqlite3
