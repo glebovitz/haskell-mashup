@@ -68,11 +68,23 @@ widgetFile = (if development then widgetFileReload
 data Extra = Extra
     { extraCopyright :: Text
     , extraAnalytics :: Maybe Text -- ^ Google Analytics
+
+    , extraGooglePlusClientId :: Text
+    , extraGooglePlusSecret   :: Text
+
+    , extraFacebookAppName   :: Text
+    , extraFacebookAppId     :: Text
+    , extraFacebookAppSecret :: Text
     } deriving Show
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = Extra
     <$> o .:  "copyright"
     <*> o .:? "analytics"
+    <*> o .:  "plusClientId"
+    <*> o .:  "plusSecret"
+    <*> o .:  "facebookAppName"
+    <*> o .:  "facebookAppId"
+    <*> o .:  "facebookAppSecret"
 
 

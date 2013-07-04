@@ -3,9 +3,6 @@ module Foundation where
 import Prelude
 import Yesod
 import Yesod.Static
-import Yesod.Auth
-import Yesod.Auth.BrowserId
-import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
@@ -19,6 +16,9 @@ import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import System.Log.FastLogger (Logger)
+import Data.Text (Text)
+import qualified Data.Text as T
+import Control.Applicative
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -74,6 +74,9 @@ instance Yesod App where
         master <- getYesod
         mmsg <- getMessage
 
+        -- See if the user is authenticated.
+        --mAuthId <- maybeUserId
+
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final
@@ -81,12 +84,14 @@ instance Yesod App where
         -- you to use normal widget features in default-layout.
 
         pc <- widgetToPageContent $ do
+            addScript (StaticR js_jquery_min_js)
+            addScript (StaticR js_bootstrap_min_js)
             $(combineStylesheets 'StaticR
                 [ css_normalize_css
                 , css_bootstrap_css
                 ])
             $(widgetFile "default-layout")
-        hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
+        giveUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
     -- This is done to provide an optimization for serving static files from
     -- a separate domain. Please see the staticRoot setting in Settings.hs
@@ -95,7 +100,7 @@ instance Yesod App where
     urlRenderOverride _ _ = Nothing
 
     -- The page to be redirected to when authentication is required.
-    authRoute _ = Just $ AuthR LoginR
+    --authRoute _ = Just $ AuthR LoginR
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -126,25 +131,25 @@ instance YesodPersist App where
 instance YesodPersistRunner App where
     getDBRunner = defaultGetDBRunner connPool
 
-instance YesodAuth App where
-    type AuthId App = UserId
-
-    -- Where to send a user after successful login
-    loginDest _ = HomeR
-    -- Where to send a user after logout
-    logoutDest _ = HomeR
-
-    getAuthId creds = runDB $ do
-        x <- getBy $ UniqueUser $ credsIdent creds
-        case x of
-            Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert $ User (credsIdent creds) Nothing
-
-    -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId def, authGoogleEmail]
-
-    authHttpManager = httpManager
+-- instance YesodAuth App where
+--     type AuthId App = UserId
+--
+--     -- Where to send a user after successful login
+--     loginDest _ = HomeR
+--     -- Where to send a user after logout
+--     logoutDest _ = HomeR
+--
+--     getAuthId creds = runDB $ do
+--         x <- getBy $ UniqueUser $ credsIdent creds
+--         case x of
+--             Just (Entity uid _) -> return $ Just uid
+--             Nothing -> do
+--                 fmap Just $ insert $ User (credsIdent creds) Nothing
+--
+--     -- You can add other plugins like BrowserID, email or OAuth here
+--     authPlugins _ = [authBrowserId def, authGoogleEmail]
+--
+--     authHttpManager = httpManager
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
@@ -161,3 +166,19 @@ getExtra = fmap (appExtra . settings) getYesod
 -- wiki:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
+
+userIdSessionName :: Text
+userIdSessionName = "SESSION_USERID"
+
+maybeUserId :: Handler (Maybe UserId)
+maybeUserId = do
+    (fmap (read . T.unpack)) <$> lookupSession userIdSessionName
+
+removeUserId :: Handler ()
+removeUserId =
+    deleteSession userIdSessionName
+
+setUserId :: UserId -> Handler ()
+setUserId =
+    setSession userIdSessionName . T.pack . show
+

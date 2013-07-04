@@ -1,1 +1,161 @@
-document.getElementById(#{toJSON aDomId}).innerHTML = "This text was added by the Javascript part of the homepage widget.";
+function jsonPost (url, body, successHandler, errorHandler, mContext) {
+  $.ajax (url,
+          { data: JSON.stringify (body),
+            contentType: "application/json",
+            dataType: "json",
+            type: "POST" }).done (function (result) {
+              if (result.type === "success") {
+                successHandler.apply (mContext, [result.value]);
+              } else if (result.type === "error") {
+                errorHandler.apply (mContext, [result.message]);
+              } else {
+                console.log ("unknown result:", result);
+              }
+            });
+}
+
+function jsonGet (url, successHandler, errorHandler, mContext) {
+  $.getJSON (url,
+             function (result) {
+               if (result.type === "success") {
+                 successHandler.apply (mContext, [result.value]);
+               } else if (result.type === "error") {
+                 errorHandler.apply (mContext, [result.message]);
+               } else {
+                 console.log ("unknown result:", result);
+               }
+             });
+}
+
+function getSignInInfo () {
+  var userIdent = $("#userIdent");
+  var password  = $("#password");
+
+  if (userIdent.val ().length == 0 ||
+      userIdent.val ().length == 0) {
+    alert ("you must provide a user identifier and a password");
+  }
+
+  return { ident: userIdent.val (),
+           password: password.val () };
+}
+
+
+function signIn () {
+  var signInInfo = getSignInInfo ();
+
+  $("#invalidSignIn").hide ();
+  jsonPost ("/signin",
+            signInInfo,
+            function () {
+              $("#signInForm").modal ("hide");
+              $("#signOutButton").show ();
+              fetchFeeds ();
+            },
+            function (msg) {
+              $("#invalidSignIn").text (msg).show ();
+            });
+}
+
+function signUp () {
+  var signInInfo = getSignInInfo ();
+
+  $("#invalidSignIn").hide ();
+  jsonPost ("/signup",
+            signInInfo,
+            function () {
+              $("#signInForm").modal ("hide");
+              $("#signOutButton").show ();
+              fetchFeeds ();
+            },
+            function (msg) {
+              $("#invalidSignIn").text (msg).show ();
+            });
+}
+
+function addFeed (authUrl) {
+  var win = window.open (authUrl);
+
+  function checkClosed () {
+    if (win.closed) {
+      window.setTimeout (fetchFeeds, 1000);
+    } else {
+      window.setTimeout (checkClosed, 100);
+    }
+  }
+
+  window.setTimeout (checkClosed, 100);
+}
+
+function insertItem (div) {
+  var index    = $(div).data ("index");
+  var children = $("#feedData").children ();
+
+  for (var i = 0; i < children.length; i++) {
+    if (index > $(children[i]).data ("index")) {
+      div.insertBefore (children[i]);
+      return;
+    }
+  }
+
+  $("#feedData").append (div);
+}
+
+function renderFeedItem (iconUrl, item) {
+  var div     = $("<div class='feeditem'>");
+  var img     = $("<div class=\"feedicon\" style=\"background-image:url('" + iconUrl + "')\">");
+  var author  = $("<div class='author'>" + item.author + "</div>");
+  var time    = $("<div class='time'>" + new Date (item.time).toLocaleString () + "</div>");
+  var content = $("<div class='content'>" + item.content + "</div>");
+  div.data ("index", new Date (item.time).getTime ());
+
+  div.append (img, author, time, content);
+  insertItem (div);
+}
+
+function fetchFeeds () {
+  jsonGet ("/feeds",
+           function (data) {
+             $("#signOutButton").show ();
+             $("#feedData").empty ();
+             $("#feedBar").empty ();
+
+             for (var i = 0; i < data.known.length; i++) {
+               var button = $("<button type='button' class='btn'>Add " + data.known[i].name + " Feed</button>");
+               var url    = data.known[i].authUrl;
+               button.click (function () { addFeed ($(this).data ("url")); });
+               button.data ("url", url);
+               $("#feedBar").append (button);
+             }
+
+             if (data.available.length > 0) {
+               $("#noFeeds").hide ();
+             } else {
+               $("#noFeeds").show ();
+             }
+
+             for (var i = 0; i < data.available.length; i++) {
+               jsonGet (data.available[i].url,
+                        function (data) {
+                          for (var j = 0; j < data.length; j++) {
+                            renderFeedItem (this.iconUrl, data[j]);
+                          }
+                        },
+                        function (msg) {
+                          console.log ("error:", msg);
+                        },
+                        data.available[i]);
+             }
+           },
+           function () {
+             $("#signOutButton").hide ();
+             $("#signInForm").modal ();
+           });
+}
+
+$(function () {
+  $("#signInForm button").click (signIn);
+  $("#signInForm #signUp").click (signUp);
+
+  fetchFeeds ();
+});

@@ -1,6 +1,50 @@
-h1 {
-    text-align: center
+#invalidSignIn {
+  text-align: center;
+  font-weight: bold;
+  display    : none;
+  color      : red;
 }
-h2##{aDomId} {
-    color: #990
+
+#noFeeds {
+  font-weight: bold;
+  font-size  : 24px;
+  text-align : center;
+  display    : none;
+  margin     : 20px 0;
+}
+
+.feeditem {
+  width        : 180px;
+  height       : 100px;
+  margin       : 2px;
+  border       : 1px solid rgba(0,0,0,0.3);
+  box-shadow   : 1px 1px 3px rgba(0,0,0,0.3);
+  border-radius: 5px;
+  float        : left;
+
+  > div.feedicon {
+    float      : right;
+    width      : 16px;
+    height     : 16px;
+    margin     : 2px 2px 0 0;
+  }
+
+  > div.author {
+    font-weight: bold;
+    margin     : 2px 2px 0 2px;
+  }
+
+  > div.time {
+    font-style : italic;
+    color      : #808080;
+    font-size  : 10px;
+    margin     : 0 2px;
+  }
+
+  > div.content {
+    font-size  : 12px;
+    height     : 62px;
+    margin     : 0 2px;
+    overflow   : hidden;
+  }
 }

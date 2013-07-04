@@ -1,3 +1,10 @@
+<header .clearfix>
+    <div .name>
+      Social Mashup
+    <a href=@{SignOutR} .btn type=button #signOutButton>
+      Sign Out
 $maybe msg <- mmsg
     <div #message>#{msg}
 ^{widget}
+<footer>
+    #{extraCopyright $ appExtra $ settings master}

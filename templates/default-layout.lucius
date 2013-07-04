@@ -1,0 +1,27 @@
+header {
+  padding      : 10px 0px;
+  border-bottom: 1px solid #aaa;
+
+  .name {
+    float      : left;
+    font-size  : 26px;
+    line-height: 28px;
+    font-weight: bold;
+  }
+
+  a {
+    float      : right;
+  }
+
+  #signOutButton {
+    display    : none;
+  }
+}
+
+footer {
+  border-top   : 1px solid #aaa;
+  text-align   : center;
+  font-size    : 0.8em;
+  color        : #888;
+}
+

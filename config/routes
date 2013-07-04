@@ -1,7 +1,14 @@
 /static StaticR Static getStatic
-/auth   AuthR   Auth   getAuth
 
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET POST
+/ HomeR GET
+/signup SignUpR POST
+/signin SignInR POST
+/signout SignOutR GET
+/feeds FeedsR GET
+/feeds/facebook      FeedsFacebookR     GET
+/feeds/facebook/auth FeedsFacebookAuthR GET
+/feeds/plus          FeedsPlusR         GET
+/feeds/plus/auth     FeedsPlusAuthR     GET

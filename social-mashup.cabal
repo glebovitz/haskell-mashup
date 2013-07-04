@@ -26,6 +26,7 @@ library
         ghc-options:   -Wall -O0
     else
         ghc-options:   -Wall -O2
+    ghc-options:  -Wall
 
     extensions: TemplateHaskell
                 QuasiQuotes
@@ -70,6 +71,9 @@ library
                  , conduit                       >= 1.0
                  , monad-logger                  >= 0.3
                  , fast-logger                   >= 0.3
+                 , fb
+                 , time
+                 , http-types
 
 executable         social-mashup
     if flag(library-only)
@@ -81,7 +85,7 @@ executable         social-mashup
                      , social-mashup
                      , yesod
 
-    ghc-options:       -threaded -O2
+    ghc-options:       -threaded -O2 -Wall
 
 test-suite test
     type:              exitcode-stdio-1.0

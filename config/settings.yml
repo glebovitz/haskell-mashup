@@ -2,8 +2,14 @@ Default: &defaults
   host: "*4" # any IPv4 host
   port: 3000
   approot: "http://localhost:3000"
-  copyright: Insert copyright statement here
+  copyright: Copyright (C) 2013 FP Complete
   #analytics: UA-YOURCODE
+  plusClientId: "627498920093.apps.googleusercontent.com"
+  plusSecret: "60Efu5b3dgJ7GIGiZ7SEsrDD"
+  facebookAppName: "masstac-yesodtest"
+  facebookAppId: "570189183031377"
+  facebookAppSecret: "c6cde88e48cc5c836813bccdcdf872fd"
+
 
 Development:
   <<: *defaults
