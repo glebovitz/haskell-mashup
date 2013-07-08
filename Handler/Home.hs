@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections, OverloadedStrings #-}
+-{-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Home where
 
 import Import

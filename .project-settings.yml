@@ -32,6 +32,7 @@ modules:
   Application:
     filename: Application.hs
   Main(app/main.hs):
+    target-type: web
     filename: app/main.hs
   Settings.StaticFiles:
     filename: Settings/StaticFiles.hs
