@@ -1,4 +1,4 @@
--{-# LANGUAGE TupleSections, OverloadedStrings #-}
+{-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Home where
 
 import Import
@@ -183,7 +183,7 @@ data FacebookFeed = FacebookFeed { facebookCredentials :: FB.Credentials
                                  }
 
 data FacebookItem = FacebookItem { facebookItemAuthor  :: FB.UserId
-                                 , facebookItemTime    :: FB.FbUTCTime
+                                 , facebookItemTime    :: FB.FQLTime
                                  , facebookItemContent :: Text
                                  }
 
@@ -227,7 +227,7 @@ instance SocialFeed FacebookFeed where
               maybe "unknown author" FB.friendName $
                 find ((== facebookItemAuthor item) . FB.friendId) friends
         in GenFeedItem { feedItemAuthor  = friendName
-                       , feedItemTime    = FB.unFbUTCTime $ facebookItemTime item
+                       , feedItemTime    = FB.unFQLTime $ facebookItemTime item
                        , feedItemContent = facebookItemContent item
                        }
 

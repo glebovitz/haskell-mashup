@@ -20,7 +20,7 @@ import Model
 
 type Specs = YesodSpec App
 
-runDB :: SqlPersist (NoLoggingT (ResourceT IO)) a -> YesodExample App a
+runDB :: SqlPersist (NoLoggingT (ResourceT runResourceTIO)) a -> YesodExample App a
 runDB query = do
     pool <- fmap connPool getTestYesod
     liftIO $ runResourceT $ runNoLoggingT $ runSqlPool query pool
