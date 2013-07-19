@@ -1,5 +1,4 @@
 module Foundation where
-xxx
 import Prelude
 import Yesod
 import Yesod.Static
